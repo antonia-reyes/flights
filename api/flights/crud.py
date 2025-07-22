@@ -12,7 +12,7 @@ async def create_flight(flight_data: schema.FlightCreate) -> models.Flight:
     return flight
 
 
-async def get_flight(flight_code: str) -> Optional[models.Flight]:
+async def get_flight_by_code(flight_code: str) -> Optional[models.Flight]:
     flight = await models.Flight.find_one(models.Flight.flightCode == flight_code)
     if not flight:
         raise exceptions.FlightNotFoundError()

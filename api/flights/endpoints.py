@@ -21,7 +21,7 @@ async def get_flights():
 @router.get("/{flight_code}", response_model=schema.Flight)
 async def get_flight(flight_code: str):
     """Get a flight by ID."""
-    flight = await crud.get_flight(flight_code)
+    flight = await crud.get_flight_by_code(flight_code)
     return flight
 
 
