@@ -12,17 +12,17 @@ class FlightCategory(str, Enum):
 
 
 class Passenger(BaseModel):
-    id: int = Field(...)
-    name: str = Field(...)
+    id: int = Field(..., gt=0)
+    name: str = Field(..., min_length=1)
     hasConnections: bool = Field(...)
-    age: int = Field(...)
+    age: int = Field(..., gt=0)
     flightCategory: FlightCategory = Field(...)
-    reservationId: str = Field(...)
+    reservationId: str = Field(..., min_length=1)
     hasCheckedBaggage: bool = Field(...)
 
 
 class Flight(Document):
-    flightCode: str = Field(...)
+    flightCode: str = Field(..., min_length=1)
     passengers: List[Passenger] = Field(default=[])
 
     class Settings:
