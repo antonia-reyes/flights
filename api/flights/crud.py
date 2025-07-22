@@ -27,8 +27,13 @@ async def update_flight(flight_code: str, flight_data: schema.FlightUpdate) -> O
     flight = await models.Flight.find_one(models.Flight.flightCode == flight_code)
     if not flight:
         raise exceptions.FlightNotFoundError()
-    await flight.set(flight_data.model_dump())
-    return await models.Flight.find_one(models.Flight.flightCode == flight_code)
+    
+    update_data = flight_data.model_dump(exclude_unset=True, exclude_none=True)
+    
+    if update_data:
+        await flight.set(update_data)
+    
+    return flight
 
 
 async def delete_flight(flight_code: str) -> bool:
