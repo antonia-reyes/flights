@@ -2,7 +2,6 @@
 
 from typing import Optional, List
 from . import models, exceptions, schema
-from bson import ObjectId
 
 
 async def create_flight(flight_data: schema.FlightCreate) -> models.Flight:
@@ -13,8 +12,8 @@ async def create_flight(flight_data: schema.FlightCreate) -> models.Flight:
     return flight
 
 
-async def get_flight(flight_id: str) -> Optional[models.Flight]:
-    flight = await models.Flight.get(ObjectId(flight_id))
+async def get_flight(flight_code: str) -> Optional[models.Flight]:
+    flight = await models.Flight.find_one(models.Flight.flightCode == flight_code)
     if not flight:
         raise exceptions.FlightNotFoundError()
     return flight
@@ -24,16 +23,16 @@ async def get_all_flights() -> List[models.Flight]:
     return await models.Flight.find_all().to_list()
 
 
-async def update_flight(flight_id: str, flight_data: schema.FlightUpdate) -> Optional[models.Flight]:
-    flight = await models.Flight.get(ObjectId(flight_id))
+async def update_flight(flight_code: str, flight_data: schema.FlightUpdate) -> Optional[models.Flight]:
+    flight = await models.Flight.find_one(models.Flight.flightCode == flight_code)
     if not flight:
         raise exceptions.FlightNotFoundError()
     await flight.set(flight_data.model_dump())
-    return await models.Flight.get(ObjectId(flight_id))
+    return await models.Flight.find_one(models.Flight.flightCode == flight_code)
 
 
-async def delete_flight(flight_id: str) -> bool:
-    flight = await models.Flight.get(ObjectId(flight_id))
+async def delete_flight(flight_code: str) -> bool:
+    flight = await models.Flight.find_one(models.Flight.flightCode == flight_code)
     if not flight:
         raise exceptions.FlightNotFoundError()
     await flight.delete()

@@ -18,10 +18,10 @@ async def get_flights():
     return flights
 
 
-@router.get("/{flight_id}", response_model=schema.Flight)
-async def get_flight(flight_id: str):
+@router.get("/{flight_code}", response_model=schema.Flight)
+async def get_flight(flight_code: str):
     """Get a flight by ID."""
-    flight = await crud.get_flight(flight_id)
+    flight = await crud.get_flight(flight_code)
     return flight
 
 
@@ -31,13 +31,13 @@ async def create_flight(flight: schema.FlightCreate):
     return await crud.create_flight(flight)
 
 
-@router.put("/{flight_id}", response_model=schema.Flight)
-async def update_flight(flight_id: str, flight: schema.FlightUpdate):
+@router.put("/{flight_code}", response_model=schema.Flight)
+async def update_flight(flight_code: str, flight: schema.FlightUpdate):
     """Update a flight."""
-    return await crud.update_flight(flight_id, flight)
+    return await crud.update_flight(flight_code, flight)
 
 
-@router.delete("/{flight_id}", response_model=bool)
-async def delete_flight(flight_id: str):
+@router.delete("/{flight_code}", response_model=bool)
+async def delete_flight(flight_code: str):
     """Delete a flight."""
-    return await crud.delete_flight(flight_id)
+    return await crud.delete_flight(flight_code)
