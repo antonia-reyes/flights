@@ -1,0 +1,9 @@
+beanie
+fastapi
+pymongo
+motor
+pydantic
+python-multipart
+python-dotenv
+pydantic-settings
+uvicorn
