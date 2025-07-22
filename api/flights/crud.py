@@ -1,34 +1,40 @@
 """This module contains the CRUD operations for the flights API."""
 
 from typing import Optional, List
-from .models import Flight
+from . import models, exceptions, schema
 from bson import ObjectId
 
 
-async def create_flight(flight_data: Flight) -> Flight:
-    await flight_data.create()
-    return flight_data
+async def create_flight(flight_data: schema.FlightCreate) -> models.Flight:
+    if await models.Flight.find_one(models.Flight.flightCode == flight_data.flightCode):
+        raise exceptions.DuplicateFlightError()
+    flight = models.Flight(**flight_data.model_dump())
+    await flight.create()
+    return flight
 
 
-async def get_flight(flight_id: str) -> Optional[Flight]:
-    return await Flight.get(ObjectId(flight_id))
-
-
-async def get_all_flights() -> List[Flight]:
-    return await Flight.find_all().to_list()
-
-
-async def update_flight(flight_id: str, flight_data: dict) -> Optional[Flight]:
-    flight = await Flight.get(ObjectId(flight_id))
+async def get_flight(flight_id: str) -> Optional[models.Flight]:
+    flight = await models.Flight.get(ObjectId(flight_id))
     if not flight:
-        return None
-    await flight.set(flight_data)
-    return await Flight.get(ObjectId(flight_id))
+        raise exceptions.FlightNotFoundError()
+    return flight
+
+
+async def get_all_flights() -> List[models.Flight]:
+    return await models.Flight.find_all().to_list()
+
+
+async def update_flight(flight_id: str, flight_data: schema.FlightUpdate) -> Optional[models.Flight]:
+    flight = await models.Flight.get(ObjectId(flight_id))
+    if not flight:
+        raise exceptions.FlightNotFoundError()
+    await flight.set(flight_data.model_dump())
+    return await models.Flight.get(ObjectId(flight_id))
 
 
 async def delete_flight(flight_id: str) -> bool:
-    flight = await Flight.get(ObjectId(flight_id))
+    flight = await models.Flight.get(ObjectId(flight_id))
     if not flight:
-        return False
+        raise exceptions.FlightNotFoundError()
     await flight.delete()
     return True

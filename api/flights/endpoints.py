@@ -28,14 +28,13 @@ async def get_flight(flight_id: str):
 @router.post("/", response_model=schema.Flight)
 async def create_flight(flight: schema.FlightCreate):
     """Create a flight."""
-    flight_data = schema.Flight(**flight.model_dump())
-    return await crud.create_flight(flight_data)
+    return await crud.create_flight(flight)
 
 
 @router.put("/{flight_id}", response_model=schema.Flight)
 async def update_flight(flight_id: str, flight: schema.FlightUpdate):
     """Update a flight."""
-    return await crud.update_flight(flight_id, flight.model_dump())
+    return await crud.update_flight(flight_id, flight)
 
 
 @router.delete("/{flight_id}", response_model=bool)

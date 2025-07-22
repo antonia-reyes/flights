@@ -48,7 +48,6 @@ class FlightUpdate(BaseModel):
 
 class Flight(FlightBase):
     """Schema for a flight"""
-    id: str = Field(...)
 
     class Config:
         from_attributes = True
