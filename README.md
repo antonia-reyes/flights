@@ -24,3 +24,18 @@ docker compose up
 
 Check the docs at http://localhost:8000/docs
 
+
+# Description
+
+This project was made with FastAPI and MongoDB, along with Docker Compose.
+
+The project is a simple API for managing flights.
+
+The API has the following endpoints:
+
+- GET /flights
+- GET /flights/{flight_code}
+- POST /flights
+- PUT /flights/{flight_code}
+- DELETE /flights/{flight_code}
+
